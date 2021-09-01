@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PollyServiceFactory", "PollyServiceFactory\PollyServiceFactory.csproj", "{D6296206-B21C-451C-8BDE-C88AAAC10586}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resiliencia", "Resiliencia\Resiliencia.csproj", "{A30E391E-E26E-4033-87BF-AB6379B5A57F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D6296206-B21C-451C-8BDE-C88AAAC10586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6296206-B21C-451C-8BDE-C88AAAC10586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6296206-B21C-451C-8BDE-C88AAAC10586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6296206-B21C-451C-8BDE-C88AAAC10586}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A30E391E-E26E-4033-87BF-AB6379B5A57F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A30E391E-E26E-4033-87BF-AB6379B5A57F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A30E391E-E26E-4033-87BF-AB6379B5A57F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A30E391E-E26E-4033-87BF-AB6379B5A57F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97C796AE-856D-4843-A93F-4549A3010700}
+	EndGlobalSection
+EndGlobal
