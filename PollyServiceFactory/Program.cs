@@ -2,6 +2,7 @@
 using Resiliencia.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PollyServiceFactory
 {
@@ -9,24 +10,28 @@ namespace PollyServiceFactory
     {
         static void Main(string[] args)
         {
-            var polly = new PollyFactory();
-            PollyParametrizacaoRetry<string> parametrosPolly = CreatePollyParametrizacao();
-            var result = polly.CreateRetryWithFallbackAsync(parametrosPolly).GetAwaiter().GetResult();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(result);
-            Console.ForegroundColor = ConsoleColor.White;
+            var parametrosPolly = CreatePollyParametrizacao();
+            var policy = PollyFactory.Create().CreateRetryAsync(parametrosPolly.Get());
+
+            while (true)
+            {
+                var result = policy.ExecuteAsync(async () => await Service.Execute()).GetAwaiter().GetResult();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(result);
+                Console.ForegroundColor = ConsoleColor.White;
+                Task.Delay(2000).Wait();
+            }
         }
 
-        private static PollyParametrizacaoRetry<string> CreatePollyParametrizacao()
+        private static PollyRetryBuilder<string> CreatePollyParametrizacao()
         {
-            return new PollyParametrizacaoRetry<string>()
+            return new PollyRetryBuilder<string>()
                 .WithDefaultValue("Sem resultado")
-                .WithTaskHandler(() => Service.Execute())
-                .WithPollyExpectionCondition(x => x.Message == "Operação não está válida")
-                .WithPollyResultCondition(x => new[] { "3","4","5", "6" }.Contains(x))
-                .WithRetryHandler((result, exception, retry) =>
+                .WithExpectionCondition(x => x.Message == "Operação não está válida")
+                .WithResultCondition(x => new[] { "3", "4", "5", "6" }.Contains(x))
+                .WithOnRetry((result, exception, retry) =>
                 {
-                    if(exception is not null)
+                    if (exception is not null)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine($"TENTATIVA {retry} | EXCEPTION {exception.GetType().Name}");
@@ -37,7 +42,7 @@ namespace PollyServiceFactory
                         Console.WriteLine($"TENTATIVA {retry} | RESULT {result}");
                     }
                 })
-                .WithRetry(3);
+                .WithRetry(2);
         }
     }
 }

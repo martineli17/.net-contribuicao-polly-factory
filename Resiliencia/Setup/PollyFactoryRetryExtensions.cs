@@ -1,23 +1,23 @@
 ﻿using Polly;
+using Polly.Wrap;
 using Resiliencia.Objetos;
-using System.Threading.Tasks;
 
 namespace Resiliencia.Setup
 {
     public static class PollyFactoryRetryExtensions
     {
-        public static async Task<TReturn> CreateRetryWithFallbackAsync<TReturn>(
-            this IPollyFactory pollyFactory, PollyParametrizacaoRetry<TReturn> setup)
+        public static AsyncPolicyWrap<TReturn> CreateRetryAsync<TReturn>(
+            this PollyFactory pollyFactory, PollyConfigurations<TReturn> setup)
         {
-            var policy = Policy<TReturn>
+            var policyRetry = Policy<TReturn>
                         .HandleResult(setup.ResultCondition)
                         .Or(setup.ExpectionCondition)
                         .RetryAsync(setup.Retry, (result, retry)
-                        => setup.RetryHandler(result.Result, result.Exception, retry));
+                        => setup.OnRetry(result.Result, result.Exception, retry));
 
-            return await Policy
-                    .WrapAsync(pollyFactory.CreateFallback(setup.DefaultValue), policy)
-                    .ExecuteAsync(async () => await setup.TaskHandler());
+            var policyCircuite = Policy.WrapAsync(pollyFactory.CreateCircuitBreaker(setup), policyRetry);
+
+            return Policy.WrapAsync(pollyFactory.CreateFallback(setup), policyCircuite);
         }
     }
 }
